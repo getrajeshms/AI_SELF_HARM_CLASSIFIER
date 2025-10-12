@@ -9,7 +9,7 @@ This is a complete medical classification system designed for medico-legal analy
 ### 🤖 AI-Powered Classification
 - **Dual AI Support**: Choose between Gemini or OpenAI for classification
 - **Flexible API Key Setup**: Enter API keys directly in the app or use environment variables
-- **8 Predefined Categories**: Specialized medical categories for self-harm descriptions
+- **10 Predefined Categories**: Specialized medical categories for self-harm descriptions
 - **Confidence Scoring**: Detailed confidence scores (0-1) with reasoning for each classification
 - **Smart Rate Limiting**: Automatic retry logic with exponential backoff
 
