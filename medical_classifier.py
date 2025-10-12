@@ -371,27 +371,29 @@ class MedicalClassifier:
                     categories_text += f"  - {subcat}\n"
         
         return f"""
-        You are a Chief Medical Officer specializing in medico-legal cases and ICD-10 classification. Your task is to classify self-harm descriptions into specific medical categories for forensic analysis.
-
-        **COMPREHENSIVE ICD-10 BASED CLASSIFICATION CATEGORIES:**
+        You are a Chief Medical Officer specializing in medico-legal classification of self-harm and injury mechanisms.
+        Your task is to classify the following medico-legal description into the **most specific subcategory** based on mechanism of injury, regardless of intent (intentional or accidental).
+        Your role is to analyze each textual description of a self-harm/event and assign it to the most specific subcategory from the structured schema below.
+        The classification must align with ICD-10 medico-legal self-harm categories and be suitable for hospital records or forensic research.
         {categories_text}
 
         **CLASSIFICATION GUIDELINES:**
         1. You must classify each description into exactly ONE subcategory from the list above
         2. Choose the MOST SPECIFIC subcategory that matches the description
-        3. For poisoning cases, identify the specific substance type (pharmaceutical, pesticide, household chemical, etc.)
+        3. For poisoning cases, Rat poison, identify the specific substance type (pharmaceutical, pesticide, household chemical,Ratol, Rat poison etc.)
         4. For trauma cases, identify the mechanism (asphyxiation, sharp object, blunt trauma, burns, etc.)
         5. If multiple methods are clearly described, use "Combined Methods" from category I
-        6. If the description is unclear or intent is uncertain, use appropriate category from J
-        7. Base classification on medical terminology, mechanism of harm, and clinical presentation
-        8. Provide confidence score between 0.0 and 1.0 based on certainty
+        6. If the description includes any of the following words or similar context — “burn”, “fire”, “flame”, “hot oil”, “cooking”, “immolation”, “scald”, “heat”, “steam”, “gas stove”, “kerosene lamp”, “wood fire”, “thermal injury” — you must classify it under **Category D. Burns/Thermal Injury**. The presence of “accidental” or “accidentally” should not override this rule. Classify based on **mechanism (thermal exposure)**.
+        7. Other than point 6 above if the description is unclear or intent is uncertain, use appropriate category from J
+        8. Base classification on medical terminology, mechanism of harm, and clinical presentation
+        9. Provide confidence score between 0.0 and 1.0 based on certainty
 
         **SPECIFIC CLASSIFICATION RULES:**
         
         **Poisoning/Toxic Ingestion:**
-        - Pharmaceutical: tablets, capsules, syrups, injections (medical drugs)
-        - Pesticides: organophosphates, insecticides, herbicides, fungicides
-        - Household/Industrial: rat poison, acids, alkalis, cleaning agents, kerosene
+        - Pharmaceutical: CONSUMPTION OF TABLETS,CONSUMPTION of MULTIPLE TABLETS, unknown tablets, capsules, syrups, injections (medical drugs)
+        - Pesticides: OP[organophosphates], insecticides, herbicides, fungicides
+        - Household/Industrial: Ratol [Rat poison],rat poison, acids, alkalis, cleaning agents, kerosene
         - Plant/Natural: plant-based toxins, mushrooms
         - Unknown: when substance is not specified or cannot be determined
         
@@ -407,7 +409,7 @@ class MedicalClassifier:
         - Specify object: glass, knife/blade, or other sharp objects
         
         **Burns/Thermal:**
-        - Fire: self-immolation, burning
+        - Fire: Burns,Firewood,Gas cylinder, self-immolation, burning, Kerosene fire, petrol fire
         - Chemical: corrosive burns
         - Hot Liquid/Steam: scalding
         - Contact: touching hot objects
@@ -422,6 +424,10 @@ class MedicalClassifier:
         - Firearm: specify if handgun, rifle, shotgun, or other
         - Electrocution: intentional electrical injury
         - Strangulation, explosive, exposure, starvation
+
+        Sanity Rule:
+        If the reasoning explicitly mentions a known substance (e.g., “Ratol,” “organophosphate,” “acid,” etc.), 
+        the classification must not default to J. Unclear/Undetermined. Instead, use the appropriate poisoning subcategory.
 
         **CONFIDENCE SCORING GUIDELINES:**
         - 0.9-1.0: Very clear indicators, specific method/substance mentioned with medical terminology
